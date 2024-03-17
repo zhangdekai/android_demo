@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">android_demo</string>
+    <string name="action_settings">Settings</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+    <string name="lorem_ipsum">
+        lorem_ipsum is too long, has removed!!!
+    </string>
+    <string name='helloWorld'>
+        "Hello, 安卓的世界🌍"
+    </string>
+    <string name="main2">哈哈哈，这算是第二页了吧，layout 布局不会呀</string>
+    <string name="pushMain2">跳转达到Main2</string>
+    <string name="pushMain3">跳转达到Main3</string>
+
+</resources>
