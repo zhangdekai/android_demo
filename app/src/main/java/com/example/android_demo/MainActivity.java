@@ -40,14 +40,9 @@ public class MainActivity extends AppCompatActivity {
         appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 
-        binding.fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAnchorView(R.id.fab)
-                        .setAction("Action", null).show();
-            }
-        });
+        binding.fab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                .setAnchorView(R.id.fab)
+                .setAction("Action", null).show());
 
         setTextViewText();
 
@@ -69,25 +64,19 @@ public class MainActivity extends AppCompatActivity {
 
     void buttonClick() {
         Button button = findViewById(R.id.button_second);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent();
-                intent .setClass(MainActivity.this, MainActivity2.class);
-                startActivity(intent);
-            }
+        button.setOnClickListener(view -> {
+            Intent intent = new Intent();
+            intent .setClass(MainActivity.this, MainActivity2.class);
+            startActivity(intent);
         });
     }
 
     void buttonClick1() {
         Button button = findViewById(R.id.button_third);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent();
-                intent .setClass(MainActivity.this, MainActivity3.class);
-                startActivity(intent);
-            }
+        button.setOnClickListener(view -> {
+            Intent intent = new Intent();
+            intent .setClass(MainActivity.this, MainActivity3.class);
+            startActivity(intent);
         });
     }
 
