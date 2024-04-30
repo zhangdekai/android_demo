@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 
+import com.example.android_demo.share.ShareActivity;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -49,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
         buttonClick();
 
         buttonClick1();
+        buttonClick2();
     }
 
     void setTextViewText() {
@@ -76,6 +78,15 @@ public class MainActivity extends AppCompatActivity {
         button.setOnClickListener(view -> {
             Intent intent = new Intent();
             intent .setClass(MainActivity.this, MainActivity3.class);
+            startActivity(intent);
+        });
+    }
+
+    void buttonClick2() {
+        Button button = findViewById(R.id.button_fourth);
+        button.setOnClickListener(view -> {
+            Intent intent = new Intent();
+            intent.setClass(MainActivity.this, ShareActivity.class);
             startActivity(intent);
         });
     }

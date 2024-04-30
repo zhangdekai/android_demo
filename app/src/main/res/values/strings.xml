@@ -15,5 +15,6 @@
     <string name="main2">哈哈哈，这算是第二页了吧，layout 布局不会呀</string>
     <string name="pushMain2">跳转达到Main2</string>
     <string name="pushMain3">跳转达到Main3</string>
+    <string name="pushShare">跳转达到Share</string>
 
 </resources>
