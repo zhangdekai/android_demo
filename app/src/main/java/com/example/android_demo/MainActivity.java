@@ -2,14 +2,18 @@ package com.example.android_demo;
 
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.media.CamcorderProfile;
+import android.media.MediaCodecInfo;
+import android.media.MediaCodecList;
+import android.media.MediaFormat;
+import android.os.Build;
 import android.os.Bundle;
 
-import com.example.android_demo.share.ShareActivity;
+//import com.example.android_demo.share.ShareActivity;
+//import com.example.android_demo.video_dismension.VideoDimension;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-import android.view.View;
 
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -18,10 +22,19 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.example.android_demo.databinding.ActivityMainBinding;
 
+import android.util.Log;
+import android.util.Range;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.TextView;
+
+import org.json.JSONArray;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -67,9 +80,24 @@ public class MainActivity extends AppCompatActivity {
     void buttonClick() {
         Button button = findViewById(R.id.button_second);
         button.setOnClickListener(view -> {
-            Intent intent = new Intent();
-            intent .setClass(MainActivity.this, MainActivity2.class);
-            startActivity(intent);
+
+            List<String> list = dissensionValue();
+
+            String temp = String.join(",", list);
+
+            Log.d("d10", "33333支持的视频尺寸4： supportedResolutions" + temp);
+
+//            final  List<String> list = getSupportedResolutions();
+//
+//            Log.d("d4", "list" + list.size());
+//
+//
+//            final  List<String> list1 = getSupportedCamcorderResolutions();
+//            Log.d("d5", "list1 - " + list1.size());
+
+//            Intent intent = new Intent();
+//            intent .setClass(MainActivity.this, MainActivity2.class);
+//            startActivity(intent);
         });
     }
 
@@ -85,10 +113,138 @@ public class MainActivity extends AppCompatActivity {
     void buttonClick2() {
         Button button = findViewById(R.id.button_fourth);
         button.setOnClickListener(view -> {
-            Intent intent = new Intent();
-            intent.setClass(MainActivity.this, ShareActivity.class);
-            startActivity(intent);
+
+//            VideoDimension.dissensionValue();
+
+            dissensionValue();
+
+          final  List<String> list = getSupportedResolutions();
+
+          Log.d("d4", "list" + list.size());
+
+
+            final  List<String> list1 = getSupportedCamcorderResolutions();
+            Log.d("d5", "list1 - " + list1.size());
+
+//            Intent intent = new Intent();
+//            intent.setClass(MainActivity.this, ShareActivity.class);
+//            startActivity(intent);
         });
+    }
+
+    public static List<String> getSupportedCamcorderResolutions() {
+        List<String> supportedResolutions = new ArrayList<>();
+        int[] qualities = {
+                CamcorderProfile.QUALITY_LOW,
+                CamcorderProfile.QUALITY_HIGH,
+                CamcorderProfile.QUALITY_480P,
+                CamcorderProfile.QUALITY_720P,
+                CamcorderProfile.QUALITY_1080P,
+                CamcorderProfile.QUALITY_2160P,
+        };
+
+        for (int quality : qualities) {
+            if (CamcorderProfile.hasProfile(quality)) {
+                CamcorderProfile profile = CamcorderProfile.get(quality);
+                String resolution = profile.videoFrameWidth + "x" + profile.videoFrameHeight;
+                Log.d("d5", "resolution: " + resolution);
+                supportedResolutions.add(resolution);
+            }
+        }
+
+        return supportedResolutions;
+    }
+
+    public static List<String> dissensionValue() {
+
+        final MediaCodecList codecInfoList = new MediaCodecList(MediaCodecList.REGULAR_CODECS);
+
+        MediaCodecInfo[] codecInfos = codecInfoList.getCodecInfos();
+
+        List<String> supportedResolutions = new ArrayList<String>();
+        for (MediaCodecInfo codecInfo : codecInfos) {
+            if (!codecInfo.isEncoder()) {
+               String dimension =  getSupportVideoDimension(getVideoCapabilities(codecInfo));
+
+               if(!dimension.isEmpty() && !supportedResolutions.contains(dimension)) {
+                   supportedResolutions.add(dimension);
+               }
+
+                Log.d("d7", "支持的视频尺寸： dimension - " + dimension);
+
+            }
+        }
+
+        Log.d("d3", "33333支持的视频尺寸： supportedResolutions" + supportedResolutions.size());
+
+        return supportedResolutions;
+
+    }
+
+    private static String getSupportVideoDimension(MediaCodecInfo.VideoCapabilities videoCapabilities) {
+
+        if(videoCapabilities != null) {
+            final Range<Integer> supportedWidths = videoCapabilities.getSupportedWidths();
+            final int widthLower =  supportedWidths.getLower();
+            final int widthUpper =  supportedWidths.getUpper();
+
+            final Range<Integer> supportedHeights = videoCapabilities.getSupportedHeights();
+            final int heightLower = supportedHeights.getLower();
+            final int heightUpper = supportedHeights.getUpper();
+
+            Log.d("d6", "支持的视频尺寸1： width - " + widthLower + "x" + widthUpper);
+            Log.d("d6", "支持的视频尺寸1： height - " + heightLower + "x" + heightUpper);
+
+
+            Log.d("d3", "支持的视频尺寸1： lower - " + widthLower + "x" + heightLower);
+            Log.d("d3", "支持的视频尺寸1： upper - " + widthUpper + "x" + heightUpper);
+
+            return widthUpper + "x" + heightUpper;
+        }
+        return  "";
+    }
+
+
+    public static List<String> getSupportedResolutions() {
+
+        List<String> supportedResolutions = new ArrayList<>();
+        MediaCodecList codecList = new MediaCodecList(MediaCodecList.ALL_CODECS);
+        MediaCodecInfo[] codecInfos = codecList.getCodecInfos();
+
+        for (MediaCodecInfo codecInfo : codecInfos) {
+            if (!codecInfo.isEncoder()) {
+                MediaCodecInfo.VideoCapabilities videoCapabilities = getVideoCapabilities(codecInfo);
+                if (videoCapabilities != null) {
+                    for (int width = 320; width <= 3840; width += 320) {  // 适当调整分辨率范围
+                        for (int height = 240; height <= 2160; height += 240) {
+                            if (videoCapabilities.isSizeSupported(width, height)) {
+                                Log.d("d4", "4支持的视频尺寸： " + width + "x" + height);
+                                supportedResolutions.add(width + "x" + height);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return supportedResolutions;
+    }
+
+    private static MediaCodecInfo.VideoCapabilities getVideoCapabilities(MediaCodecInfo codecInfo) {
+        String[] types = codecInfo.getSupportedTypes();
+//        String[] needTypes = [MediaFormat.MIMETYPE_VIDEO_AVC, MediaFormat.MIMETYPE_VIDEO_MPEG4];
+        for (String type : types) {
+            if (type.startsWith("video/")) {
+                try {
+                    MediaCodecInfo.CodecCapabilities capabilities = codecInfo.getCapabilitiesForType(type);
+                    Log.d("d3", " MediaFormat type  ===  " + type);
+                    return capabilities.getVideoCapabilities();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return null;
     }
 
     @Override
