@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+    <!--  配置应用基本信息、权限、组件声明等： -->
+
+    <!-- 声明应用所需权限（如网络、相机等） -->
 
     <application
         android:allowBackup="true"

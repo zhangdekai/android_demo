@@ -1,3 +1,5 @@
+
+/// 配置项目包含的模块和仓库：
 pluginManagement {
     repositories {
         google {
